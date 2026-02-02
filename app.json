@@ -1,26 +1,28 @@
 {
   "expo": {
-    "name": "app2",
-    "slug": "app2",
+    "name": "WeightTrack Pro",
+    "slug": "weighttrack-pro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "app2",
-    "userInterfaceStyle": "automatic",
+    "scheme": "weighttrack",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1a1a1a"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.weighttrack.pro"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1a1a1a"
       },
+      "package": "com.weighttrack.pro",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
@@ -34,6 +36,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "987c294e-c3c6-4003-8242-d6c97669ced4"
+      }
+    },
+    "owner": "matteogalfre"
   }
 }
