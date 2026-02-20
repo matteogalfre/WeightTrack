@@ -156,6 +156,26 @@ export default function StatsScreen() {
     return { byPhase: result, overallAvg };
   }, [data.weightEntries, activeProfile, isFemale, hasCycleData, getPhaseForDate]);
 
+  const normalizedChart = useMemo(() => {
+    const entries = chartType === 'weight' ? weightData : measurementData;
+    if (!stats || entries.length === 0) {
+      return { data: entries, yMin: 0, yMax: undefined, offset: 0 };
+    }
+
+    const range = stats.max - stats.min;
+    const padding = Math.max(range * 0.2, 1);
+    const yMin = stats.min - padding;
+    const yMax = stats.max + padding;
+    const totalRange = yMax - yMin;
+
+    const normalized = entries.map(e => ({
+      ...e,
+      value: e.value - yMin,
+    }));
+
+    return { data: normalized, yMin, yMax, offset: yMin, totalRange };
+  }, [weightData, measurementData, chartType, stats]);
+
   if (!activeProfile) {
     return (
       <View style={styles.centered}>
@@ -164,11 +184,10 @@ export default function StatsScreen() {
     );
   }
 
-  const currentData = chartType === 'weight' ? weightData : measurementData;
   const chartColor = chartType === 'weight' ? '#6366f1' : MEASUREMENT_COLORS[selectedMeasurement];
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 90 }}>
       {/* Type selector */}
       <View style={styles.typeSelector}>
         <TouchableOpacity
@@ -225,9 +244,9 @@ export default function StatsScreen() {
 
       {/* Chart */}
       <View style={styles.chartCard}>
-        {currentData.length >= 2 ? (
+        {normalizedChart.data.length >= 2 ? (
           <LineChart
-            data={currentData}
+            data={normalizedChart.data}
             width={screenWidth - 32}
             height={220}
             color={chartColor}
@@ -250,8 +269,9 @@ export default function StatsScreen() {
             showVerticalLines
             verticalLinesColor="#333"
             noOfSections={5}
-            maxValue={stats ? stats.max + (stats.max - stats.min) * 0.1 : undefined}
-            spacing={(screenWidth - 80) / Math.max(currentData.length - 1, 1)}
+            maxValue={normalizedChart.totalRange}
+            formatYLabel={(label: string) => (parseFloat(label) + normalizedChart.offset).toFixed(1)}
+            spacing={(screenWidth - 80) / Math.max(normalizedChart.data.length - 1, 1)}
             initialSpacing={16}
             endSpacing={16}
             pointerConfig={{
@@ -266,7 +286,7 @@ export default function StatsScreen() {
               pointerLabelComponent: (items: { value: number }[]) => (
                 <View style={styles.pointerLabel}>
                   <Text style={styles.pointerText}>
-                    {items[0].value.toFixed(1)} {chartType === 'weight' ? 'kg' : 'cm'}
+                    {(items[0].value + normalizedChart.offset).toFixed(1)} {chartType === 'weight' ? 'kg' : 'cm'}
                   </Text>
                 </View>
               ),
@@ -275,7 +295,7 @@ export default function StatsScreen() {
         ) : (
           <View style={styles.noDataContainer}>
             <Text style={styles.noDataText}>
-              {currentData.length === 0 
+              {normalizedChart.data.length === 0 
                 ? 'Pas de données sur cette période'
                 : 'Il faut au moins 2 points pour afficher le graphique'}
             </Text>

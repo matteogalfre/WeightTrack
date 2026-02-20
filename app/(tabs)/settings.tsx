@@ -20,17 +20,21 @@ export default function SettingsScreen() {
       a.download = fileName;
       a.click();
       URL.revokeObjectURL(url);
-      Alert.alert('Succès', 'Fichier téléchargé!');
+      Alert.alert('Succes', 'Fichier telecharge!');
     } else {
-      const fileUri = FileSystem.documentDirectory + fileName;
+      const fileUri = FileSystem.cacheDirectory + fileName;
       await FileSystem.writeAsStringAsync(fileUri, content, {
         encoding: FileSystem.EncodingType.UTF8,
       });
       
       if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(fileUri, { mimeType, dialogTitle: 'Exporter' });
+        await Sharing.shareAsync(fileUri, { 
+          mimeType: mimeType === 'application/json' ? 'application/octet-stream' : mimeType, 
+          dialogTitle: 'Exporter',
+          UTI: mimeType === 'application/json' ? 'public.json' : 'public.comma-separated-values-text',
+        });
       } else {
-        Alert.alert('Succès', `Fichier sauvegardé: ${fileName}`);
+        Alert.alert('Succes', `Fichier sauvegarde: ${fileName}`);
       }
     }
   };
@@ -95,28 +99,52 @@ export default function SettingsScreen() {
   };
 
   const handleExport = async (format: ExportFormat) => {
+    setExportModalVisible(false);
+    
+    const date = new Date().toISOString().split('T')[0];
+    let content: string;
+    let fileName: string;
+    let mime: string;
+
     try {
-      setExportModalVisible(false);
-      const date = new Date().toISOString().split('T')[0];
-      
       switch (format) {
         case 'json':
-          await shareFile(exportData(), `weighttrack_backup_${date}.json`, 'application/json');
+          content = exportData();
+          fileName = `weighttrack_backup_${date}.json`;
+          mime = 'application/json';
           break;
         case 'csv_weight':
-          await shareFile(generateWeightCSV(), `weighttrack_poids_${date}.csv`, 'text/csv');
+          content = generateWeightCSV();
+          fileName = `weighttrack_poids_${date}.csv`;
+          mime = 'text/csv';
           break;
         case 'csv_measurements':
-          await shareFile(generateMeasurementsCSV(), `weighttrack_mensurations_${date}.csv`, 'text/csv');
+          content = generateMeasurementsCSV();
+          fileName = `weighttrack_mensurations_${date}.csv`;
+          mime = 'text/csv';
           break;
         case 'csv_cycles':
-          await shareFile(generateCyclesCSV(), `weighttrack_cycles_${date}.csv`, 'text/csv');
+          content = generateCyclesCSV();
+          fileName = `weighttrack_cycles_${date}.csv`;
+          mime = 'text/csv';
           break;
+        default:
+          return;
       }
     } catch (error) {
-      console.error('Export error:', error);
-      Alert.alert('Erreur', 'Impossible d\'exporter les données');
+      console.error('Export generation error:', error);
+      Alert.alert('Erreur', 'Impossible de generer les donnees');
+      return;
     }
+
+    setTimeout(async () => {
+      try {
+        await shareFile(content, fileName, mime);
+      } catch (error) {
+        console.error('Export share error:', error);
+        Alert.alert('Erreur', 'Impossible de partager le fichier');
+      }
+    }, 300);
   };
 
   const handleImport = async () => {
@@ -194,7 +222,7 @@ export default function SettingsScreen() {
   const hasFemaleProfile = data.profiles.some(p => p.gender === 'female');
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 90 }}>
       <Text style={styles.sectionTitle}>Exporter</Text>
       
       <View style={styles.card}>

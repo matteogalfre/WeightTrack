@@ -106,7 +106,7 @@ export default function HomeScreen() {
   const measurementCount = data.measurementEntries.filter(e => e.profileId === activeProfile.id).length;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 90 }}>
       {/* Quick summary card */}
       <View style={styles.summaryCard}>
         <Text style={styles.greeting}>Bonjour {activeProfile.name} 👋</Text>

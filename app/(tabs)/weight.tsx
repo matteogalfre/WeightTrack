@@ -40,7 +40,7 @@ export default function WeightScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 90 }}>
       <Link href="/modal" asChild>
         <TouchableOpacity style={styles.addButton}>
           <Text style={styles.addButtonText}>+ Ajouter pesée</Text>

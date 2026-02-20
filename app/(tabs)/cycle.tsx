@@ -158,7 +158,7 @@ export default function CycleScreen() {
     : null;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 90 }}>
       {/* Current phase card */}
       {currentPhase ? (
         <View style={[styles.phaseCard, { borderLeftColor: PHASE_INFO[currentPhase.phase].color }]}>
