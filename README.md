@@ -6,6 +6,7 @@
   <img alt="License" src="https://img.shields.io/github/license/matteogalfre/WeightTrack?color=7c83f2&style=flat-square">
   <img alt="Last commit" src="https://img.shields.io/github/last-commit/matteogalfre/WeightTrack?color=7c83f2&style=flat-square">
   <img alt="Stars" src="https://img.shields.io/github/stars/matteogalfre/WeightTrack?color=7c83f2&style=flat-square">
+  <img alt="Latest release" src="https://img.shields.io/github/v/release/matteogalfre/WeightTrack?color=7c83f2&style=flat-square">
   <img alt="Built with Expo" src="https://img.shields.io/badge/built%20with-Expo-7c83f2?style=flat-square">
 </div>
 
@@ -19,6 +20,13 @@
 - [x] Export your data and restore a backup
 - [x] No account, nothing sent anywhere: data stays on the device
 - [x] Entirely open source
+
+## Download
+
+[<img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" alt="Get it on Obtainium" height="60">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/matteogalfre/WeightTrack)
+[<img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60">](https://github.com/matteogalfre/WeightTrack/releases/latest)
+
+Obtainium keeps the app up to date straight from this repository's releases. Android 7.0 or newer.
 
 ## Run it
 
